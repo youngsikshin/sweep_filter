@@ -1,0 +1,10 @@
+<launch>
+
+    <!-- run sweep_node node -->
+    <node name="sweep_filter"          pkg="sweep_filter"  type="sweep_filter" output="screen">
+            <param name="frame_id"            type="string" value="laser_frame"/>
+    </node>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser" args="0 0 0 0 0 -0.05 1 /base_footprint /laser_frame" />
+</launch>
+
