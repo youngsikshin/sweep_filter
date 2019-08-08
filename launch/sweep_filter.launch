@@ -1,8 +1,15 @@
 <launch>
 
     <!-- run sweep_node node -->
-    <node name="sweep_filter"          pkg="sweep_filter"  type="sweep_filter" output="screen">
-            <param name="frame_id"            type="string" value="laser_frame"/>
+    <node name="sweep_filter"  pkg="sweep_filter"  type="sweep_filter" output="screen">
+        <param name="frame_id" type="string" value="laser_frame"/>
+
+        <param name="input_topic" type="string" value="/pc2"/>
+        <param name="output_topic" type="string" value="/filtered_pc2"/>
+
+        <param name="radius" type="double" value="0.5"/>
+        <param name="preserve_distance" type="double" value="1.8"/>
+        <param name="degree" type="double" value="135.0"/>
     </node>
 
     <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser" args="0 0 0 0 0 -0.05 1 /base_footprint /laser_frame" />

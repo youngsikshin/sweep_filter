@@ -11,12 +11,19 @@ using namespace std;
 class SweepFilter
 {
 public:
-    SweepFilter(ros::NodeHandle nh):
-      nh_(nh)
+    SweepFilter(ros::NodeHandle nh, ros::NodeHandle nh_private):
+      nh_(nh), nh_private_(nh_private)
     {
         cout << "SweepFilter" << endl;
-        sweep_sub_ = nh_.subscribe<sensor_msgs::PointCloud2>("/pc2",1,&SweepFilter::sweep_callback, this);
-        scan_pub_ = nh_.advertise<sensor_msgs::PointCloud2>("/filtered_pc",1);
+        nh_private.param<std::string>("input_topic", in_pc_topic_, "/pc2");
+        nh_private.param<std::string>("output_topic", out_pc_topic_, "/filtered_pc");
+
+        nh_private.param<double>("radius", radius_, 0.5);
+        nh_private.param<double>("preserve_distance", preserve_distance_, 1.8);
+        nh_private.param<double>("degree", degree_, 135.0);
+        
+        sweep_sub_ = nh_.subscribe<sensor_msgs::PointCloud2>(in_pc_topic_,1,&SweepFilter::sweep_callback, this);
+        scan_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(out_pc_topic_,1);
     }
 
     ~SweepFilter() {}
@@ -68,6 +75,15 @@ public:
 
 private:
     ros::NodeHandle nh_;
+    ros::NodeHandle nh_private_;
+
+    std::string in_pc_topic_;
+    std::string out_pc_topic_;
+
+    double radius_;
+    double preserve_distance_;
+    double degree_;
+
     ros::Publisher scan_pub_;
     ros::Subscriber sweep_sub_;
 };
@@ -75,8 +91,8 @@ private:
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "sweep_filter");
-    ros::NodeHandle nh;
-    SweepFilter sweep(nh);
+    ros::NodeHandle nh, nh_private;
+    SweepFilter sweep(nh, nh_private);
 
     ros::spin();
 
