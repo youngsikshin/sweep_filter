@@ -39,22 +39,22 @@ public:
         pcl::PointCloud<pcl::PointXYZ>::Ptr pub_pc(new pcl::PointCloud<pcl::PointXYZ>);
 
         for(size_t i=0; i<pc_ptr->points.size(); ++i) {
-            double radius = 0.5;
+
             std::vector<int> point_idx_radius_search;
             std::vector<float> point_radius_squared_distance;
 
             double dist = sqrt(pc_ptr->points[i].x*pc_ptr->points[i].x+pc_ptr->points[i].y*pc_ptr->points[i].y+pc_ptr->points[i].z*pc_ptr->points[i].z);
             double angle = atan2(pc_ptr->points[i].y,pc_ptr->points[i].x) * 180.0 / M_PI;
 
-            if(dist > 1.8) {
+            if(dist > preserve_distance_) {
                 pub_pc->points.push_back(pc_ptr->points[i]);
                 continue;
-            } else if(fabs(angle) > 135.0) {
+            } else if(fabs(angle) > degree_) {
                 continue;
             }
             else {
 
-                if(kdtree.radiusSearch(pc_ptr->points[i], radius, point_idx_radius_search, point_radius_squared_distance) > 2)
+                if(kdtree.radiusSearch(pc_ptr->points[i], radius_, point_idx_radius_search, point_radius_squared_distance) > 2)
                 {
                     pub_pc->points.push_back(pc_ptr->points[i]);
                 }

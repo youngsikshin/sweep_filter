@@ -5,7 +5,7 @@
         <param name="frame_id" type="string" value="laser_frame"/>
 
         <param name="input_topic" type="string" value="/pc2"/>
-        <param name="output_topic" type="string" value="/filtered_pc2"/>
+        <param name="output_topic" type="string" value="/filtered_pc"/>
 
         <param name="radius" type="double" value="0.5"/>
         <param name="preserve_distance" type="double" value="1.8"/>
